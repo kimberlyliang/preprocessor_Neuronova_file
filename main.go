@@ -12,8 +12,6 @@ import (
 	"strings"
 
 	"log/slog"
-
-	"github.com/google/uuid"
 )
 
 func main() {
@@ -22,54 +20,8 @@ func main() {
 	slog.SetDefault(logger)
 
 	integrationID := os.Getenv("INTEGRATION_ID")
-	baseDir := os.Getenv("BASE_DIR")
-	if integrationID == "" {
-		id := uuid.New()
-		integrationID = id.String()
-	}
-	if baseDir == "" {
-		baseDir = "/mnt/efs"
-	}
-
 	logger.Info(integrationID)
-	// create subdirectories
-	err := os.Chdir(baseDir)
-	if err != nil {
-		logger.Error(err.Error())
-		os.Exit(1)
-	}
-
-	// inputDir
-	inputDir := fmt.Sprintf("%s/input/%s", baseDir, integrationID)
-	err = os.MkdirAll(inputDir, 0755)
-	if err != nil {
-		logger.Error(err.Error())
-		os.Exit(1)
-	}
-
-	// outputDir
-	err = os.MkdirAll("output", 0777)
-	if err != nil {
-		logger.Error(err.Error())
-		os.Exit(1)
-	}
-	err = os.Chown("output", 1000, 1000)
-	if err != nil {
-		logger.Error(err.Error())
-		os.Exit(1)
-	}
-
-	outputDir := fmt.Sprintf("%s/output/%s", baseDir, integrationID)
-	err = os.MkdirAll(outputDir, 0777)
-	if err != nil {
-		logger.Error(err.Error())
-		os.Exit(1)
-	}
-	err = os.Chown(outputDir, 1000, 1000)
-	if err != nil {
-		logger.Error(err.Error())
-		os.Exit(1)
-	}
+	inputDir := os.Getenv("INPUT_DIR")
 
 	// get input files
 	sessionToken := os.Getenv("SESSION_TOKEN")
