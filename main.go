@@ -51,17 +51,31 @@ func main() {
 	// copy files into input directory
 	fmt.Println(payload.Data)
 	for _, d := range payload.Data {
-		cmd := exec.Command("wget", "-O", d.FileName, d.Url)
+		cmd := exec.Command("wget", "-v", "-O", d.FileName, d.Url)
 		cmd.Dir = inputDir
 		var out strings.Builder
 		var stderr strings.Builder
 		cmd.Stdout = &out
 		cmd.Stderr = &stderr
-		if err := cmd.Run(); err != nil {
+		err := cmd.Run()
+
+		// Print stdout content
+		stdoutContent := out.String()
+		fmt.Println("Stdout output:")
+		fmt.Println(stdoutContent)
+
+		// Print or log stderr content
+		stderrContent := stderr.String()
+		fmt.Println("Stderr output (verbose output):")
+		fmt.Println(stderrContent)
+
+		// If there was an error, log it
+		if err != nil {
 			logger.Error(err.Error(),
-				slog.String("error", stderr.String()))
+				slog.String("error", stderrContent))
 		}
 	}
+
 }
 
 type Packages struct {
