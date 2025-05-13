@@ -51,7 +51,10 @@ func main() {
 	// copy files into input directory
 	fmt.Println(payload.Data)
 	for _, d := range payload.Data {
-		cmd := exec.Command("wget", "-v", "-O", d.FileName, d.Url)
+		fmt.Printf("Original filename: %s\n", d.FileName)
+		newFileName := extractSubIdentifier(d.FileName)
+		fmt.Printf("Extracted sub-identifier: %s\n", newFileName)
+		cmd := exec.Command("wget", "-v", "-O", newFileName, d.Url)
 		cmd.Dir = inputDir
 		var out strings.Builder
 		var stderr strings.Builder
@@ -150,4 +153,10 @@ func getIntegration(apiHost string, integrationId string, sessionToken string) (
 	body, _ := io.ReadAll(res.Body)
 
 	return body, nil
+}
+
+func extractSubIdentifier(fileName string) string {
+	// Implement the logic to extract a sub-identifier from the file name
+	// This is a placeholder and should be replaced with the actual implementation
+	return fileName
 }
