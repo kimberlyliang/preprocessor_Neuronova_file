@@ -62,7 +62,7 @@ func main() {
 		cmd.Stderr = &stderr
 		err := cmd.Run()
 
-		// Print stdout content
+		// Print stdocker run preprocessordout content
 		stdoutContent := out.String()
 		fmt.Println("Stdout output:")
 		fmt.Println(stdoutContent)
@@ -156,17 +156,12 @@ func getIntegration(apiHost string, integrationId string, sessionToken string) (
 }
 
 func extractSubIdentifier(fileName string) string {
-	// Look for "sub-" in the filename
 	if idx := strings.Index(fileName, "sub-"); idx != -1 {
-		// Get everything after "sub-"
 		afterSub := fileName[idx+4:]
-		// Find the next separator (either "-" or ".")
 		nextSep := strings.IndexAny(afterSub, "-.")
 		if nextSep != -1 {
-			// Return everything between "sub-" and the next separator
 			return afterSub[:nextSep]
 		}
-		// If no separator found, return everything after "sub-"
 		return afterSub
 	}
 	return fileName
